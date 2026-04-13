@@ -31,3 +31,37 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs / temp ---
+*.log
+logs/
+*.tmp
+*.swp
+
+# --- Env / local-only config ---
+.env
+.env.*
+!.env.example
+*.local
+
+# Spring local profile overrides (keep shared profiles in git if needed)
+src/main/resources/application-local.properties
+src/main/resources/application-secrets.properties
+src/main/resources/application-*.local.properties
+
+# --- Secrets / keys / certs ---
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# --- Runtime / reports ---
+hs_err_pid*
+replay_pid*
+coverage/
