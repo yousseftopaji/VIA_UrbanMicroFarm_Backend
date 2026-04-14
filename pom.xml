@@ -10,10 +10,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dk.via.group1</groupId>
-    <artifactId>UrbanMicroFarming_Backend</artifactId>
+    <artifactId>UrbanMicroFarm_Backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>UrbanMicroFarming_Backend</name>
-    <description>UrbanMicroFarming_Backend</description>
+    <name>UrbanMicroFarm_Backend</name>
+    <description>UrbanMicroFarm_Backend</description>
     <url/>
     <licenses>
         <license/>
@@ -45,6 +45,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
@@ -87,6 +92,16 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>3.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>11.0.21</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.grpc</groupId>
                 <artifactId>spring-grpc-dependencies</artifactId>
