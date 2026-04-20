@@ -1,6 +1,7 @@
 package logic.services;
 
 import dto.TelemetryData;
+import logic.domain.Sensor;
 import logic.domain.SensorReading;
 import logic.domain.SensorType;
 
@@ -17,12 +18,17 @@ public class SensorReadingServiceImpl implements SensorReadingService {
 
         List<SensorReading> readings = new ArrayList<>();
 
-        readings.add(new SensorReading(SensorType.TEMPERATURE, telemetryData.getTemperature() / 10.0, timestamp));
-        readings.add(new SensorReading(SensorType.HUMIDITY, telemetryData.getHumidity() / 10.0, timestamp));
-        readings.add(new SensorReading(SensorType.LIGHT, telemetryData.getLight(), timestamp));
-        readings.add(new SensorReading(SensorType.SOIL_MOISTURE, telemetryData.getSoilMoisture(), timestamp));
+        Sensor temperatureSensor = new Sensor(telemetryData.getSensorId(), SensorType.TEMPERATURE, "C");
+        Sensor humiditySensor = new Sensor(telemetryData.getSensorId(), SensorType.HUMIDITY, "%");
+        Sensor lightSensor = new Sensor(telemetryData.getSensorId(), SensorType.LIGHT, "ADC");
+        Sensor soilMoistureSensor = new Sensor(telemetryData.getSensorId(), SensorType.SOIL_MOISTURE, "ADC");
 
-        //TODO call database service to save
+        readings.add(new SensorReading(temperatureSensor, telemetryData.getTemperature() / 10.0, timestamp));
+        readings.add(new SensorReading(humiditySensor, telemetryData.getHumidity() / 10.0, timestamp));
+        readings.add(new SensorReading(lightSensor, telemetryData.getLight(), timestamp));
+        readings.add(new SensorReading(soilMoistureSensor, telemetryData.getSoilMoisture(), timestamp));
+
+        // TODO call database service to save the readings
     }
 
 
