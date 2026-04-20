@@ -38,6 +38,8 @@ public class SensorReadingServiceImpl implements SensorReadingService {
     private void validate(TelemetryData telemetryData) {
         if (telemetryData.getSetupId() <= 0) {
             throw new IllegalArgumentException("Invalid setup id");
+            //this method can be maybe later put to class on its own
+            //maybe we can do like a util package where we will put all of our validation classes
         }
     }
 }
