@@ -1,4 +1,4 @@
-package logic.domain;
+package dk.via.group1.urbanmicrofarm_backend.aplication.domain;
 
 public class Sensor {
     private final int sensorId;
