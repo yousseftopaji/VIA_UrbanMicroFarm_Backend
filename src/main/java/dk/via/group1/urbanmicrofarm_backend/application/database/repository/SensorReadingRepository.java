@@ -1,6 +1,6 @@
-package dk.via.group1.urbanmicrofarm_backend.aplication.database.repository;
+package dk.via.group1.urbanmicrofarm_backend.application.database.repository;
 
-import dk.via.group1.urbanmicrofarm_backend.aplication.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.application.database.entities.SensorReadingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

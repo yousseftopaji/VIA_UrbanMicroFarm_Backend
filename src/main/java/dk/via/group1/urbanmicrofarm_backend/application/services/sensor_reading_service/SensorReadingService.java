@@ -1,4 +1,4 @@
-package dk.via.group1.urbanmicrofarm_backend.aplication.services.sensor_reading_service;
+package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
 import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 

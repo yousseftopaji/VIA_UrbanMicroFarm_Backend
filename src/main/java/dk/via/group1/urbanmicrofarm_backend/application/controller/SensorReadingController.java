@@ -1,10 +1,10 @@
-package dk.via.group1.urbanmicrofarm_backend.aplication.controller;
+package dk.via.group1.urbanmicrofarm_backend.application.controller;
 
-import dk.via.group1.urbanmicrofarm_backend.aplication.mapper.SensorReadingApiMapper;
-import dk.via.group1.urbanmicrofarm_backend.aplication.services.sensor_reading_service.SensorReadingQueryService;
+import dk.via.group1.urbanmicrofarm_backend.application.mapper.SensorReadingApiMapper;
+import dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service.SensorReadingQueryService;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingHistoryResponseDto;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingLatestResponseDto;
-import dk.via.group1.urbanmicrofarm_backend.aplication.mapper.SensorReadingPersistenceMapper;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

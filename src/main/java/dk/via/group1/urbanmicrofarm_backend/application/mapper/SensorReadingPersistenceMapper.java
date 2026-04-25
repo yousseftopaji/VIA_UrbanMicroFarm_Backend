@@ -1,8 +1,8 @@
-package dk.via.group1.urbanmicrofarm_backend.aplication.mapper;
+package dk.via.group1.urbanmicrofarm_backend.application.mapper;
 
 
-import dk.via.group1.urbanmicrofarm_backend.aplication.domain.SensorReading;
-import dk.via.group1.urbanmicrofarm_backend.aplication.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
+import dk.via.group1.urbanmicrofarm_backend.application.database.entities.SensorReadingEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;

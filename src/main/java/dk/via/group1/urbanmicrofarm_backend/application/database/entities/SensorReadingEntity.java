@@ -1,4 +1,4 @@
-package dk.via.group1.urbanmicrofarm_backend.aplication.database.entities;
+package dk.via.group1.urbanmicrofarm_backend.application.database.entities;
 
 import jakarta.persistence.*;
 
