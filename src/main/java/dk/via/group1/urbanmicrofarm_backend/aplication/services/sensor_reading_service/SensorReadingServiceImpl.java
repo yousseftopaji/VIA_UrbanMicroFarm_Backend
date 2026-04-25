@@ -4,12 +4,28 @@ import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.aplication.domain.Sensor;
 import dk.via.group1.urbanmicrofarm_backend.aplication.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.aplication.domain.SensorType;
+import dk.via.group1.urbanmicrofarm_backend.aplication.mapper.SensorReadingPersistenceMapper;
+import dk.via.group1.urbanmicrofarm_backend.aplication.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.aplication.database.repository.SensorReadingRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class SensorReadingServiceImpl implements SensorReadingService {
+
+    private final SensorReadingRepository sensorReadingRepository;
+    private final SensorReadingPersistenceMapper sensorReadingPersistenceMapper;
+
+    public SensorReadingServiceImpl(
+            SensorReadingRepository sensorReadingRepository,
+            SensorReadingPersistenceMapper sensorReadingPersistenceMapper) {
+        this.sensorReadingRepository = sensorReadingRepository;
+        this.sensorReadingPersistenceMapper = sensorReadingPersistenceMapper;
+    }
+
     @Override
     public void processReadings(TelemetryData telemetryData) {
         validate(telemetryData);
@@ -28,19 +44,20 @@ public class SensorReadingServiceImpl implements SensorReadingService {
         readings.add(new SensorReading(lightSensor, telemetryData.getLight(), timestamp));
         readings.add(new SensorReading(soilMoistureSensor, telemetryData.getSoilMoisture(), timestamp));
 
-        // TODO call database service to save the readings
+        List<SensorReadingEntity> entities = readings.stream()
+                .map(reading -> sensorReadingPersistenceMapper.toEntity(telemetryData.getSetupId(), reading))
+                .toList();
+
+        sensorReadingRepository.saveAll(entities);
     }
-
-
-
-
 
     private void validate(TelemetryData telemetryData) {
         if (telemetryData.getSetupId() <= 0) {
             throw new IllegalArgumentException("Invalid setup id");
-            //this method can be maybe later put to class on its own
-            //maybe we can do like a util package where we will put all of our validation classes
+        }
+
+        if (telemetryData.getSensorId() == null || telemetryData.getSensorId() <= 0) {
+            throw new IllegalArgumentException("Invalid sensor id");
         }
     }
 }
-
