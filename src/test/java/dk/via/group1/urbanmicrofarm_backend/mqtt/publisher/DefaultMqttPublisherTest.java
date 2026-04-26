@@ -45,7 +45,7 @@ class DefaultMqttPublisherTest {
 
   @Test
   @DisplayName("publish_nullTopic_illegalArgumentThrown")
-  void publish_nullTopic_illegalArgumentThrown() throws MqttException {
+  void publish_nullTopic_illegalArgumentThrown() {
 
     assertThatThrownBy(() -> publisher.publish(null, "some-payload"))
         .isInstanceOf(IllegalArgumentException.class)
