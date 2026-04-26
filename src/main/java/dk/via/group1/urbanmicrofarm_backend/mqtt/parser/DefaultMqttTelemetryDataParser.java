@@ -5,11 +5,11 @@ import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MqttTelemetryDataParserImpl implements MqttTelemetryDataParser
+public class DefaultMqttTelemetryDataParser implements MqttTelemetryDataParser
 {
   private final ObjectMapper objectMapper;
 
-  public MqttTelemetryDataParserImpl(ObjectMapper objectMapper) {
+  public DefaultMqttTelemetryDataParser(ObjectMapper objectMapper) {
     this.objectMapper = objectMapper;
   }
   @Override

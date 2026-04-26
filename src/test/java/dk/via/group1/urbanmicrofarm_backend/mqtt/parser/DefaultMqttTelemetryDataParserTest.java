@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MqttTelemetryDataParserImplTest
+class DefaultMqttTelemetryDataParserTest
 {
 
-  private final MqttTelemetryDataParser parser = new MqttTelemetryDataParserImpl(new ObjectMapper());
+  private final MqttTelemetryDataParser parser = new DefaultMqttTelemetryDataParser(new ObjectMapper());
 
   @Test
   void fromJson_shouldMapSnakeCaseJsonToDto() {
