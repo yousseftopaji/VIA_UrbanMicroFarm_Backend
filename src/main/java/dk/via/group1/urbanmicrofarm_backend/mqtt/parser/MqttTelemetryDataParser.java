@@ -4,6 +4,6 @@ import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
 
 public interface MqttTelemetryDataParser
 {
-  public MqttTelemetryDataDto fromJson(String payload);
-  public String toJson(MqttTelemetryDataDto payload);
+  MqttTelemetryDataDto fromJson(String payload);
+  String toJson(MqttTelemetryDataDto payload);
 }

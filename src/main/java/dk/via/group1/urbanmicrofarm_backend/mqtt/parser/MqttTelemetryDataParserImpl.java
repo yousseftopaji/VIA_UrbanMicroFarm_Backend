@@ -1,6 +1,5 @@
 package dk.via.group1.urbanmicrofarm_backend.mqtt.parser;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import tools.jackson.databind.ObjectMapper;
 import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
 import org.springframework.stereotype.Component;
