@@ -32,9 +32,20 @@ public class DefaultMqttSubscriber implements MqttSubscriber, ApplicationRunner 
   }
   @Override
   public void start() throws MqttException {
-    client = clientFactory.createClient();
-    client.connect();
+    client = clientFactory.createSubscriberClient();
     subscribe(config.getTopic());
+  }
+
+  @Override
+  public void subscribe(String topic) throws MqttException {
+    if (client == null || !client.isConnected()) {
+      throw new IllegalStateException("MQTT subscriber client is not connected");
+    }
+
+    client.subscribe(topic, 1, (receivedTopic, message) -> {
+      String payload = new String(message.getPayload(), StandardCharsets.UTF_8);
+      messageHandler.handle(receivedTopic, payload);
+    });
   }
 
   @Override
@@ -47,20 +58,6 @@ public class DefaultMqttSubscriber implements MqttSubscriber, ApplicationRunner 
     client.close();}
   }
 
-  @Override
-  public void subscribe(String topic) throws MqttException {
-    if (client == null) {
-      throw new IllegalStateException("MQTT client is not started");
-    }
-
-    client.subscribe(topic, (IMqttMessageListener)
-        (receivedTopic, message) -> {
-      String payload = new String(message.getPayload(),
-          StandardCharsets.UTF_8);
-          System.out.println("Received MQTT message on topic " + receivedTopic + ": " + payload);
-      messageHandler.handle(receivedTopic, payload);
-    });
-  }
   @Override
   public void run(ApplicationArguments args) throws Exception {
     start();
