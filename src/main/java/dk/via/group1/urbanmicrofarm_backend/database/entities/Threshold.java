@@ -1,5 +1,6 @@
-package dk.via.group1.urbanmicrofarm_backend.logic.domain;
+package dk.via.group1.urbanmicrofarm_backend.database.entities;
 
+import dk.via.group1.urbanmicrofarm_backend.logic.domain.SensorReading;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
