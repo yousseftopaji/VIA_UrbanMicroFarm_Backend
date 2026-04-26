@@ -1,7 +1,9 @@
 package dk.via.group1.urbanmicrofarm_backend.mqtt.messageHandler;
 
-import dk.via.group1.urbanmicrofarm_backend.dtos.mqttDtos.MqttSensorReadingDto;
+import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
+import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
 import dk.via.group1.urbanmicrofarm_backend.mapper.mqttMapper.MqttSensorReadingMapper;
+import dk.via.group1.urbanmicrofarm_backend.mqtt.parser.MqttTelemetryDataParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,17 +13,30 @@ public class SensorReadingMqttMessageHandler implements MqttMessageHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(SensorReadingMqttMessageHandler.class);
 
+  private final MqttTelemetryDataParser telemetryDataParser;
   private final MqttSensorReadingMapper sensorReadingMapper;
 
-  public SensorReadingMqttMessageHandler(MqttSensorReadingMapper sensorReadingMapper) {
+  public SensorReadingMqttMessageHandler(
+      MqttTelemetryDataParser telemetryDataParser,
+      MqttSensorReadingMapper sensorReadingMapper
+  ) {
+    this.telemetryDataParser = telemetryDataParser;
     this.sensorReadingMapper = sensorReadingMapper;
   }
 
   @Override
   public void handle(String topic, String payload) {
-    MqttSensorReadingDto reading = sensorReadingMapper.fromPayload(payload);
 
+    try
+    {
+      MqttTelemetryDataDto readingDto = telemetryDataParser.fromJson(payload);
+      TelemetryData reading = sensorReadingMapper.fromPayload(readingDto);
+      logger.info("MQTT sensor reading received on topic {}: {}", topic, reading);
+    }
+    catch (Exception e)
+    {
+      logger.error("Failed to parse MQTT message on topic {}: {}", topic, e.getMessage());
+    }
     // Next step: call your application service here with `reading`.
-    logger.info("MQTT sensor reading received on topic {}: {}", topic, reading);
   }
 }
