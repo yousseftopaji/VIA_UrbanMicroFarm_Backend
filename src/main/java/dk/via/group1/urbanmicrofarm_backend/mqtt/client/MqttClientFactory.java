@@ -4,5 +4,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public interface MqttClientFactory {
-  MqttClient createClient() throws MqttException;
+  MqttClient createSubscriberClient() throws MqttException;
+  MqttClient createPublisherClient() throws MqttException;
 }
