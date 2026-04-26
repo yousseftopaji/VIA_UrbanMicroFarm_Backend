@@ -4,11 +4,13 @@ import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.logic.domain.Sensor;
 import dk.via.group1.urbanmicrofarm_backend.logic.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.logic.domain.SensorType;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SensorReadingServiceImpl implements SensorReadingService {
     @Override
     public void processReadings(TelemetryData telemetryData) {

@@ -2,6 +2,7 @@ package dk.via.group1.urbanmicrofarm_backend.mqtt.messageHandler;
 
 import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
+import dk.via.group1.urbanmicrofarm_backend.logic.services.SensorReadingService;
 import dk.via.group1.urbanmicrofarm_backend.mapper.mqttMapper.MqttSensorReadingMapper;
 import dk.via.group1.urbanmicrofarm_backend.mqtt.parser.MqttTelemetryDataParser;
 import org.slf4j.Logger;
@@ -15,28 +16,32 @@ public class SensorReadingMqttMessageHandler implements MqttMessageHandler {
 
   private final MqttTelemetryDataParser telemetryDataParser;
   private final MqttSensorReadingMapper sensorReadingMapper;
+  private final SensorReadingService sensorReadingService;
 
   public SensorReadingMqttMessageHandler(
       MqttTelemetryDataParser telemetryDataParser,
-      MqttSensorReadingMapper sensorReadingMapper
+      MqttSensorReadingMapper sensorReadingMapper,
+      SensorReadingService sensorReadingService
   ) {
     this.telemetryDataParser = telemetryDataParser;
     this.sensorReadingMapper = sensorReadingMapper;
+    this.sensorReadingService = sensorReadingService;
   }
 
   @Override
   public void handle(String topic, String payload) {
 
+    TelemetryData reading;
     try
     {
       MqttTelemetryDataDto readingDto = telemetryDataParser.fromJson(payload);
-      TelemetryData reading = sensorReadingMapper.fromPayload(readingDto);
+      reading = sensorReadingMapper.fromPayload(readingDto);
       logger.info("MQTT sensor reading received on topic {}: {}", topic, reading);
+      sensorReadingService.processReadings(reading);
     }
     catch (Exception e)
     {
       logger.error("Failed to parse MQTT message on topic {}: {}", topic, e.getMessage());
     }
-    // Next step: call your application service here with `reading`.
   }
 }
