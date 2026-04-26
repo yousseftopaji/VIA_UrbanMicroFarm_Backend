@@ -35,6 +35,10 @@ public class SensorReadingMqttMessageHandler implements MqttMessageHandler {
     try
     {
       MqttTelemetryDataDto readingDto = telemetryDataParser.fromJson(payload);
+      if (readingDto == null) {
+        logger.error("Failed to parse MQTT message on topic {}: parser returned null", topic);
+        return;
+      }
       reading = sensorReadingMapper.fromPayload(readingDto);
       logger.info("MQTT sensor reading received on topic {}: {}", topic, reading);
       sensorReadingService.processReadings(reading);
