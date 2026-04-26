@@ -3,11 +3,11 @@ package dk.via.group1.urbanmicrofarm_backend.mqtt.subscriber;
 import dk.via.group1.urbanmicrofarm_backend.mqtt.messageHandler.MqttMessageHandler;
 import dk.via.group1.urbanmicrofarm_backend.mqtt.client.MqttClientFactory;
 import dk.via.group1.urbanmicrofarm_backend.mqtt.config.MqttClientConfig;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -17,7 +17,7 @@ public class DefaultMqttSubscriber implements MqttSubscriber, ApplicationRunner 
 
   private final MqttClientConfig config;
   private final MqttClientFactory clientFactory;
-  private MqttMessageHandler messageHandler;
+  private final MqttMessageHandler messageHandler;
 
   private MqttClient client;
 
@@ -50,16 +50,19 @@ public class DefaultMqttSubscriber implements MqttSubscriber, ApplicationRunner 
 
   @Override
   public void stop() throws MqttException {
-    if (client != null)
-    {if(client.isConnected())
-    {
-      client.disconnect();
+    if (client != null) {
+      try {
+        if (client.isConnected()) {
+          client.disconnect();
+        }
+      } finally {
+        client.close();
+      }
     }
-    client.close();}
   }
 
   @Override
-  public void run(ApplicationArguments args) throws Exception {
+  public void run(@Nullable ApplicationArguments args) throws Exception {
     start();
   }
 }

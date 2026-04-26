@@ -19,16 +19,25 @@ public class DefaultMqttPublisher implements MqttPublisher {
 
   @Override
   public void publish(String topic, String payload) throws MqttException {
+    if (topic == null || topic.isBlank()) {
+      throw new IllegalArgumentException("topic must not be null or blank");
+    }
+
     MqttClient client = clientFactory.createPublisherClient();
     try {
-      MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
+      MqttMessage message = new MqttMessage(payload == null
+          ? new byte[0]
+          : payload.getBytes(StandardCharsets.UTF_8));
       message.setQos(1);
       client.publish(topic, message);
     } finally {
-      if (client.isConnected()) {
-        client.disconnect();
+      try {
+        if (client.isConnected()) {
+          client.disconnect();
+        }
+      } finally {
+        client.close();
       }
-      client.close();
     }
   }
 }
