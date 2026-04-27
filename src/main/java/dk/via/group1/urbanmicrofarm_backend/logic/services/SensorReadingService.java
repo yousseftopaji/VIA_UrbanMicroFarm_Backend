@@ -1,4 +1,4 @@
-package logic.services;
+package dk.via.group1.urbanmicrofarm_backend.logic.services;
 
 import dto.TelemetryData;
 

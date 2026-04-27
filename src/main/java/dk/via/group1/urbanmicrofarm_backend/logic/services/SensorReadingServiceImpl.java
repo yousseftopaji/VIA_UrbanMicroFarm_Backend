@@ -1,9 +1,9 @@
-package logic.services;
+package dk.via.group1.urbanmicrofarm_backend.logic.services;
 
 import dto.TelemetryData;
-import logic.domain.Sensor;
-import logic.domain.SensorReading;
-import logic.domain.SensorType;
+import dk.via.group1.urbanmicrofarm_backend.logic.domain.Sensor;
+import dk.via.group1.urbanmicrofarm_backend.logic.domain.SensorReading;
+import dk.via.group1.urbanmicrofarm_backend.logic.domain.SensorType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
