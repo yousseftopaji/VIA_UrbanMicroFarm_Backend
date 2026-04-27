@@ -1,8 +1,8 @@
-package dk.via.group1.urbanmicrofarm_backend.application.mapper;
+package dk.via.group1.urbanmicrofarm_backend.mapper;
 
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingHistoryResponseDto;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingLatestResponseDto;
-import dk.via.group1.urbanmicrofarm_backend.application.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

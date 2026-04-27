@@ -1,7 +1,7 @@
 package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
-import dk.via.group1.urbanmicrofarm_backend.application.database.entities.SensorReadingEntity;
-import dk.via.group1.urbanmicrofarm_backend.application.database.repository.SensorReadingRepository;
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
 import org.springframework.stereotype.Service;
 

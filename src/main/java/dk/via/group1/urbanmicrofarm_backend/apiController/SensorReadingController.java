@@ -1,6 +1,6 @@
-package dk.via.group1.urbanmicrofarm_backend.application.controller;
+package dk.via.group1.urbanmicrofarm_backend.apiController;
 
-import dk.via.group1.urbanmicrofarm_backend.application.mapper.SensorReadingApiMapper;
+import dk.via.group1.urbanmicrofarm_backend.mapper.SensorReadingApiMapper;
 import dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service.SensorReadingQueryService;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingHistoryResponseDto;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingLatestResponseDto;
