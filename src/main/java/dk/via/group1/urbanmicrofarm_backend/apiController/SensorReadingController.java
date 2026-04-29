@@ -1,7 +1,7 @@
 package dk.via.group1.urbanmicrofarm_backend.apiController;
 
-import dk.via.group1.urbanmicrofarm_backend.mapper.SensorReadingApiMapper;
 import dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service.SensorReadingQueryService;
+import dk.via.group1.urbanmicrofarm_backend.mapper.apiMapper.SensorReadingApiMapper;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingHistoryResponseDto;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingLatestResponseDto;
 
@@ -30,7 +30,7 @@ public class SensorReadingController {
             @PathVariable String sensorType) {
 
         return sensorReadingQueryService.getLatestReading(setupId, sensorType)
-                .map(sensorReadingApiMapper::toLatestResponseDto)
+                .map(sensorReading -> sensorReadingApiMapper.toLatestResponseDto(setupId, sensorReading))
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Sensor reading not found for setupId: " + setupId + ", sensorType: " + sensorType
@@ -47,5 +47,11 @@ public class SensorReadingController {
                 sensorType,
                 sensorReadingQueryService.getHistoricalReadings(setupId, sensorType)
         );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleIllegalArgumentException(IllegalArgumentException exception) {
+        return exception.getMessage();
     }
 }

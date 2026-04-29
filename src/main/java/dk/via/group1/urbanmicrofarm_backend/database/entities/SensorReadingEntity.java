@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "sensor_readings")
+@Table(name = "sensor_readings", schema = "urban_micro_farm_app")
 public class SensorReadingEntity {
 
     @Id
