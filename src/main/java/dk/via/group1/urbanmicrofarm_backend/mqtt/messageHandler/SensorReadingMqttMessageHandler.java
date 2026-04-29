@@ -2,7 +2,7 @@ package dk.via.group1.urbanmicrofarm_backend.mqtt.messageHandler;
 
 import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.MqttTelemetryDataDto;
-import dk.via.group1.urbanmicrofarm_backend.logic.services.SensorReadingService;
+import dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service.SensorReadingService;
 import dk.via.group1.urbanmicrofarm_backend.mapper.mqttMapper.MqttSensorReadingMapper;
 import dk.via.group1.urbanmicrofarm_backend.mqtt.parser.MqttTelemetryDataParser;
 import org.slf4j.Logger;
