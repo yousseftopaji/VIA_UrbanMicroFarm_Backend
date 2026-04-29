@@ -1,12 +1,12 @@
 package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
 import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.Sensor;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
-import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
-import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
