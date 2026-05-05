@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 @Service
-public class MlPredictionClient {
+public class MLPredictionClient {
 
     private final RestClient restClient;
     private final String predictionUrl;
 
-    public MlPredictionClient(RestClient restClient, @Value("${ml.prediction.url}") String predictionUrl) {
+    public MLPredictionClient(RestClient restClient, @Value("${ml.prediction.url}") String predictionUrl) {
         this.restClient = restClient;
         this.predictionUrl = predictionUrl;
     }
