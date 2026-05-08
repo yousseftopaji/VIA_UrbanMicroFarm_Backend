@@ -1,22 +1,15 @@
 package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
-import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
-import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.Sensor;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
-import dk.via.group1.urbanmicrofarm_backend.dto.mlDto.WaterPredictionRequestDto;
-import dk.via.group1.urbanmicrofarm_backend.dto.mlDto.WaterPredictionResponseDto;
-import dk.via.group1.urbanmicrofarm_backend.dto.mqttDto.ActuatorCommandDto;
+import dk.via.group1.urbanmicrofarm_backend.application.services.watering.WateringAutomationService;
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
+import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
+import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
-import dk.via.group1.urbanmicrofarm_backend.mapper.mlMapper.WaterPredictionMapper;
-import dk.via.group1.urbanmicrofarm_backend.mlClient.MLPredictionClient;
-import dk.via.group1.urbanmicrofarm_backend.mqtt.publisher.MqttPublisher;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,29 +17,17 @@ import java.util.List;
 @Service
 public class SensorReadingServiceImpl implements SensorReadingService {
 
-    private static final double SOIL_MOISTURE_THRESHOLD_PERCENT = 20.0; //our soil moisture threshold 20%
-
-
     private final SensorReadingRepository sensorReadingRepository;
     private final SensorReadingPersistenceMapper sensorReadingPersistenceMapper;
-    private final WaterPredictionMapper waterPredictionMapper;
-    private final MLPredictionClient mlPredictionClient;
-    private final MqttPublisher mqttPublisher;
-    private final ObjectMapper objectMapper;
+    private final WateringAutomationService wateringAutomationService;
 
     public SensorReadingServiceImpl(
             SensorReadingRepository sensorReadingRepository,
             SensorReadingPersistenceMapper sensorReadingPersistenceMapper,
-            WaterPredictionMapper waterPredictionMapper,
-            MLPredictionClient mlPredictionClient,
-            MqttPublisher mqttPublisher,
-            ObjectMapper objectMapper) {
+            WateringAutomationService wateringAutomationService) {
         this.sensorReadingRepository = sensorReadingRepository;
         this.sensorReadingPersistenceMapper = sensorReadingPersistenceMapper;
-        this.waterPredictionMapper = waterPredictionMapper;
-        this.mlPredictionClient = mlPredictionClient;
-        this.mqttPublisher = mqttPublisher;
-        this.objectMapper = objectMapper;
+        this.wateringAutomationService = wateringAutomationService;
     }
 
     @Override
@@ -78,19 +59,20 @@ public class SensorReadingServiceImpl implements SensorReadingService {
 
         sensorReadingRepository.saveAll(entities); // we save the readings to db
 
-        double soilMoisturePercent = convertSoilMoistureToPercent(soilMoistureRaw); // we convert soil moisture to percantage
 
-        // if we the reading is bellow threshold than call for predictinng
-        if (soilMoisturePercent < SOIL_MOISTURE_THRESHOLD_PERCENT) {
-            requestPredictionAndWater(telemetryData, temperature, humidity, light, soilMoistureRaw);
-        }
-
+        // after saving the readings, we check if watering is needed
+        // this will call ML prediction and publish MQTT command if soil is too dry
+        wateringAutomationService.handleWateringIfNeeded(telemetryData);
     }
 
-
     // helping method to create the list of sensor readings
-    private List<SensorReading> createSensorReadings(TelemetryData telemetryData, LocalDateTime timestamp,
-                                                     double temperature, double humidity, int light, int soilMoistureRaw) {
+    private List<SensorReading> createSensorReadings(
+            TelemetryData telemetryData,
+            LocalDateTime timestamp,
+            double temperature,
+            double humidity,
+            int light,
+            int soilMoistureRaw) {
 
         List<SensorReading> readings = new ArrayList<>(); // we create empty list of sensor readings
 
@@ -109,58 +91,14 @@ public class SensorReadingServiceImpl implements SensorReadingService {
         return readings;
     }
 
-    // method for creating the "actuator command"
-    private void requestPredictionAndWater(
-            TelemetryData telemetryData,
-            double temperature,
-            double humidity,
-            int light,
-            int soilMoistureRaw) {
-
-        WaterPredictionRequestDto request = waterPredictionMapper.toRequestDto(
-                temperature,
-                humidity,
-                light,
-                soilMoistureRaw
-        );
-
-        WaterPredictionResponseDto response = mlPredictionClient.predictWater(request);
-
-        publishWaterCommand(
-                telemetryData.setupId(),
-                response.wateringAmount()
-        );
-    }
-
-    //method to send the actuator command to the mqtt publisher
-    private void publishWaterCommand(int setupId, int amountMl) {
-        String topic = "farm/" + setupId + "/cmd";
-
-        ActuatorCommandDto command = new ActuatorCommandDto(
-                "water_pump",
-                amountMl
-        );
-
-        try {
-            String payload = objectMapper.writeValueAsString(command);
-            mqttPublisher.publish(topic, payload);
-        } catch (MqttException e) {
-            throw new IllegalStateException("Could not publish actuator command", e);
-        }
-    }
-
-
-    //helping method the convert soil moisture to percentages
-    private double convertSoilMoistureToPercent(int rawSoilMoisture) {
-        return (rawSoilMoisture / 1023.0) * 100.0;
-    }
-
+    // helping method to validate incoming telemetry data
     private void validate(TelemetryData telemetryData) {
         if (telemetryData.setupId() <= 0) {
             throw new IllegalArgumentException("Invalid setup id");
         }
 
-        if (telemetryData.sensorId() == null || telemetryData.sensorId() <= 0) {
+        // sensor id can be null for now because contract allows null until multiple sensors are used
+        if (telemetryData.sensorId() != null && telemetryData.sensorId() <= 0) {
             throw new IllegalArgumentException("Invalid sensor id");
         }
     }

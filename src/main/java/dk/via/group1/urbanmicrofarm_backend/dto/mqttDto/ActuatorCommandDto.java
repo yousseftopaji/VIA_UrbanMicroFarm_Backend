@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record ActuatorCommandDto(
         String actuator,
 
-        @JsonProperty("amounl_ml")
+        @JsonProperty("amount_ml")
         int amountMl
 ) {}
