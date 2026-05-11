@@ -55,6 +55,7 @@ public class SensorReadingController {
         System.out.println(sensorId);
 
         return sensorReadingApiMapper.toHistoryResponseDto(
+                sensorId,
                 sensorReadingQueryService.getHistoricalReadings(sensorId, from, to)
         );
     }

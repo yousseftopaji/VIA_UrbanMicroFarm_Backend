@@ -22,6 +22,7 @@ public class SensorReadingApiMapper {
     }
 
     public SensorReadingHistoryResponseDto toHistoryResponseDto(
+            Integer sensorId,
             List<SensorReading> readings) {
 
         List<SensorReadingHistoryResponseDto.SensorReadingHistoryItemDto> data =
@@ -32,9 +33,6 @@ public class SensorReadingApiMapper {
                         ))
                         .toList();
 
-        return new SensorReadingHistoryResponseDto(
-                readings.getFirst().getSensor().getSensorId(),
-                data
-        );
+        return new SensorReadingHistoryResponseDto(sensorId, data);
     }
 }
