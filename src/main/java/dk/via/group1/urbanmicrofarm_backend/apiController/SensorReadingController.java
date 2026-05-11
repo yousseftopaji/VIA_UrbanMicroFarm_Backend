@@ -6,12 +6,15 @@ import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingHistoryResponseDto;
 import dk.via.group1.urbanmicrofarm_backend.dto.SensorReadingLatestResponseDto;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+
 @RestController
-@RequestMapping("/api/sensor-readings")
+@RequestMapping("/api/sensors")
 public class SensorReadingController {
 
     private final SensorReadingQueryService sensorReadingQueryService;
@@ -24,28 +27,35 @@ public class SensorReadingController {
         this.sensorReadingApiMapper = sensorReadingApiMapper;
     }
 
-    @GetMapping("/setups/{setupId}/sensors/{sensorType}/latest")
+    @GetMapping("/{sensorId}/readings/latest")
     public SensorReadingLatestResponseDto getLatestReading(
-            @PathVariable Integer setupId,
-            @PathVariable String sensorType) {
+            @PathVariable Integer sensorId) {
 
-        return sensorReadingQueryService.getLatestReading(setupId, sensorType)
-                .map(sensorReading -> sensorReadingApiMapper.toLatestResponseDto(setupId, sensorReading))
+        return sensorReadingQueryService.getLatestReading(sensorId)
+                .map(sensorReadingApiMapper::toLatestResponseDto)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Sensor reading not found for setupId: " + setupId + ", sensorType: " + sensorType
+                        "Sensor reading not found for sensorId: " + sensorId
                 ));
     }
 
-    @GetMapping("/setups/{setupId}/sensors/{sensorType}/history")
+    /**
+     * @param sensorId - Required. Indicates sensor id of which readings are looked for.
+     * @param from - Optional parameter. Indicates the beginning of time range of sensor readings.
+     * @param to - Optional parameter. Indicates the end of time range of sensor readings.
+     *
+     * @return Returns a list of sensor readings of sensor with @sensorId, and, if provided, a time range within @from and @to
+     */
+    @GetMapping("/{sensorId}/readings")
     public SensorReadingHistoryResponseDto getHistoricalReadings(
-            @PathVariable Integer setupId,
-            @PathVariable String sensorType) {
+            @PathVariable Integer sensorId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant to) {
+
+        System.out.println(sensorId);
 
         return sensorReadingApiMapper.toHistoryResponseDto(
-                setupId,
-                sensorType,
-                sensorReadingQueryService.getHistoricalReadings(setupId, sensorType)
+                sensorReadingQueryService.getHistoricalReadings(sensorId, from, to)
         );
     }
 
