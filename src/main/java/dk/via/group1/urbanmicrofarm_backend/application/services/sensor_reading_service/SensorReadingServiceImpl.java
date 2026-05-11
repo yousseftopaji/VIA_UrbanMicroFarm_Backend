@@ -9,7 +9,7 @@ import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class SensorReadingServiceImpl implements SensorReadingService {
     public void processReadings(TelemetryData telemetryData) {
         validate(telemetryData);
 
-        LocalDateTime timestamp = LocalDateTime.now();
+        Instant timestamp = Instant.now();
 
         List<SensorReading> readings = new ArrayList<>();
 
