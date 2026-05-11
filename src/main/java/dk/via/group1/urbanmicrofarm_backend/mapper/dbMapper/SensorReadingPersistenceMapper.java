@@ -7,9 +7,6 @@ import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
 import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 @Component
 public class SensorReadingPersistenceMapper {
 
@@ -20,7 +17,7 @@ public class SensorReadingPersistenceMapper {
         entity.setSensorId(sensorReading.getSensor().getSensorId());
         entity.setSensorType(sensorReading.getSensor().getType().name());
         entity.setValue(sensorReading.getValue());
-        entity.setTimestamp(sensorReading.getTimestamp().toInstant(ZoneOffset.UTC));
+        entity.setTimestamp(sensorReading.getTimestamp());
 
         return entity;
     }
@@ -32,15 +29,10 @@ public class SensorReadingPersistenceMapper {
                 getUnitForSensorType(entity.getSensorType())
         );
 
-        LocalDateTime timestamp = LocalDateTime.ofInstant(
-                entity.getTimestamp(),
-                ZoneOffset.UTC
-        );
-
         return new SensorReading(
                 sensor,
                 entity.getValue(),
-                timestamp
+                entity.getTimestamp()
         );
     }
 
