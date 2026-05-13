@@ -10,6 +10,7 @@ import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
