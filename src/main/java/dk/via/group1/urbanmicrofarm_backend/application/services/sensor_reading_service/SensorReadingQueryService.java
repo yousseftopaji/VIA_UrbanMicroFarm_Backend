@@ -2,11 +2,14 @@ package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading
 
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-public interface SensorReadingQueryService {
-    Optional<SensorReading> getLatestReading(Integer setupId, String sensorType);
+import com.google.type.DateTime;
 
-    List<SensorReading> getHistoricalReadings(Integer setupId, String sensorType);
+public interface SensorReadingQueryService {
+    Optional<SensorReading> getLatestReading(Integer sensorId);
+
+    List<SensorReading> getHistoricalReadings(Integer sensorId, Instant from, Instant to);
 }
