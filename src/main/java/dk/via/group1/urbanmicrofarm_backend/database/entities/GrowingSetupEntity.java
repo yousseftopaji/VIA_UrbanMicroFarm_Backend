@@ -15,7 +15,7 @@ public class GrowingSetupEntity {
 
   private String location;
 
-  @Column(nullable = false)
+  @Column
   private String email;
 
   public int getSetupId() { return setupId; }
