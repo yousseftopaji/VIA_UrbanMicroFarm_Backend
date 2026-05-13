@@ -20,6 +20,7 @@ public class WaterAmountPredictionEntity {
 
     private Instant createdAt;
 
+    // added a comment 
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
