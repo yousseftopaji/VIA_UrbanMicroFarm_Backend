@@ -11,7 +11,7 @@ import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersist
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class SensorReadingServiceImpl implements SensorReadingService {
     public void processReadings(TelemetryData telemetryData) {
         validate(telemetryData); // we check the data first
 
-        LocalDateTime timestamp = LocalDateTime.now(); // we make timestamp of time now
+        Instant timestamp = Instant.now(); // we make timestamp of time now
 
         // we get the values from telemetryData and we convert it
         double temperature = telemetryData.temperature() / 10.0;
@@ -69,7 +69,7 @@ public class SensorReadingServiceImpl implements SensorReadingService {
     // helping method to create the list of sensor readings
     private List<SensorReading> createSensorReadings(
             TelemetryData telemetryData,
-            LocalDateTime timestamp,
+            Instant timestamp,
             double temperature,
             double humidity,
             int light,
