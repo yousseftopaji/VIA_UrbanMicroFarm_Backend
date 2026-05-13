@@ -23,6 +23,8 @@ public class DefaultMqttPublisher implements MqttPublisher {
       throw new IllegalArgumentException("topic must not be null or blank");
     }
 
+    System.out.println("I was called (mqtt publish)");
+
     MqttClient client = clientFactory.createPublisherClient();
     try {
       MqttMessage message = new MqttMessage(payload == null
