@@ -6,12 +6,14 @@ public class GrowingSetup {
     private final int setupId;
     private final String serialNumber;
     private final String location;
+    private String status;
     private final List<Sensor> sensors;
 
     public GrowingSetup(int setupId, String serialNumber, String location, List<Sensor> sensors) {
         this.setupId = setupId;
         this.serialNumber = serialNumber;
         this.location = location;
+        status = "";
         this.sensors = sensors;
     }
 
@@ -25,6 +27,14 @@ public class GrowingSetup {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getStatus() {    return status;
+  }
+
+    public void setStatus(String status)
+    {
+     this.status = status;
     }
 
     public List<Sensor> getSensors() {

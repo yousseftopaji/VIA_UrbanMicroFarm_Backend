@@ -17,7 +17,7 @@ public class GrowingSetupPersistenceMapper {
 
   public GrowingSetup toDomain(GrowingSetupEntity entity) {
     return new GrowingSetup(
-        entity.getSetupId().intValue(),
+        entity.getSetupId(),
         entity.getSerialNumber(),
         entity.getLocation(),
         null

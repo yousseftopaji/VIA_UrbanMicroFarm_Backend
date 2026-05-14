@@ -8,18 +8,18 @@ public class GrowingSetupEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long setupId;
+  private int setupId;
 
   @Column(nullable = false)
   private String serialNumber;
 
   private String location;
 
-  @Column(nullable = false)
+  @Column
   private String email;
 
-  public Long getSetupId() { return setupId; }
-  public void setSetupId(Long setupId) { this.setupId = setupId; }
+  public int getSetupId() { return setupId; }
+  public void setSetupId(int setupId) { this.setupId = setupId; }
 
   public String getSerialNumber() { return serialNumber; }
   public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
