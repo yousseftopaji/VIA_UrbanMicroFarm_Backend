@@ -19,9 +19,6 @@ public class PlantEntity {
   private String type;
   private Instant datePlanted;
   private String status;
-  private String unit;
-
-  @Column(nullable = true)
   private Long sensorId;
 
   @OneToOne
@@ -52,10 +49,7 @@ public class PlantEntity {
   public String getStatus() { return status; }
   public void setStatus(String status) { this.status = status; }
 
-  public String getUnit() { return unit; }
-  public void setUnit(String unit) { this.unit = unit; }
-
-  public Long getSensorId() { return sensorId; }
+   public Long getSensorId() { return sensorId; }
   public void setSensorId(Long sensorId) { this.sensorId = sensorId; }
 
   public SensorEntity getSensor() { return sensor; }

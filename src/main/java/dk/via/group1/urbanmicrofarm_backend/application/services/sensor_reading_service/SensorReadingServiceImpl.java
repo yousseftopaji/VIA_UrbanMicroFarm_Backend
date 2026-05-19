@@ -1,7 +1,9 @@
 package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorEntity;
 import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorReadingEntity;
 import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
+import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorRepository;
 import dk.via.group1.urbanmicrofarm_backend.dto.TelemetryData;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.Sensor;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
@@ -12,17 +14,21 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SensorReadingServiceImpl implements SensorReadingService {
 
     private final SensorReadingRepository sensorReadingRepository;
+    private final SensorRepository sensorRepository;
     private final SensorReadingPersistenceMapper sensorReadingPersistenceMapper;
 
     public SensorReadingServiceImpl(
             SensorReadingRepository sensorReadingRepository,
+            SensorRepository sensorRepository,
             SensorReadingPersistenceMapper sensorReadingPersistenceMapper) {
         this.sensorReadingRepository = sensorReadingRepository;
+        this.sensorRepository = sensorRepository;
         this.sensorReadingPersistenceMapper = sensorReadingPersistenceMapper;
     }
 
@@ -44,11 +50,13 @@ public class SensorReadingServiceImpl implements SensorReadingService {
         readings.add(new SensorReading(lightSensor, telemetryData.light(), timestamp));
         readings.add(new SensorReading(soilMoistureSensor, telemetryData.soilMoisture(), timestamp));
 
-        List<SensorReadingEntity> entities = readings.stream()
-                .map(reading -> sensorReadingPersistenceMapper.toEntity(telemetryData.serialNumber(), reading))
-                .toList();
-
-        sensorReadingRepository.saveAll(entities);
+        for (SensorReading reading : readings) {
+            Optional<SensorEntity> sensor = sensorRepository.findFirstBySerialNumberAndSensorTypeName(telemetryData.serialNumber(), reading.getSensor().getType().name());
+            if (sensor.isPresent()) {
+                SensorReadingEntity entity = sensorReadingPersistenceMapper.toEntity(sensor.get().getId(), reading);
+                sensorReadingRepository.save(entity);
+            }
+        }
     }
 
     private void validate(TelemetryData telemetryData) {
