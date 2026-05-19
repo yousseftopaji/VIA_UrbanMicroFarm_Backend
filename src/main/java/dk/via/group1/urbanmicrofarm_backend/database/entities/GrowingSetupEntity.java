@@ -2,6 +2,8 @@ package dk.via.group1.urbanmicrofarm_backend.database.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "growing_setup", schema = "urban_micro_farm_app")
 public class GrowingSetupEntity {
@@ -19,6 +21,9 @@ public class GrowingSetupEntity {
   @JoinColumn(name = "userId", referencedColumnName = "id", insertable = false, updatable = false)
   private UserEntity user;
 
+  @OneToMany(mappedBy = "growingSetup")
+  private List<ActuatorEntity> actuators;
+
   public String getSerialNumber() { return serialNumber; }
   public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
 
@@ -30,4 +35,7 @@ public class GrowingSetupEntity {
 
   public UserEntity getUser() { return user; }
   public void setUser(UserEntity user) { this.user = user; }
+
+  public List<ActuatorEntity> getActuators() { return actuators; }
+  public void setActuators(List<ActuatorEntity> actuators) { this.actuators = actuators; }
 }

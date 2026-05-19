@@ -9,5 +9,7 @@ public interface AlertRepository extends JpaRepository<AlertEntity, Long> {
 
   List<AlertEntity> findBySensorReadingIdOrderByTimestampDesc(Long sensorReadingId);
 
+  List<AlertEntity> findByWateringEventIdOrderByTimestampDesc(Long wateringEventId);
+
   List<AlertEntity> findByStatusOrderByTimestampDesc(String status);
 }

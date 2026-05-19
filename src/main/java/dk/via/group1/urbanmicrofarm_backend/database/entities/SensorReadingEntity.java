@@ -1,77 +1,48 @@
 package dk.via.group1.urbanmicrofarm_backend.database.entities;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 
 @Entity
 @Table(name = "sensor_readings", schema = "urban_micro_farm_app")
 public class SensorReadingEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long readingId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;   // <--- Changed to matching 'id' as requested
 
-    @Column(nullable = false)
-    private Integer setupId;
+  @Column(nullable = false)
+  private Double value;
 
-    @Column(nullable = false)
-    private Integer sensorId;
+  @Column(nullable = false)
+  private Instant timestamp;
 
-    @Column(nullable = false)
-    private String sensorType;
+  @Column(nullable = false)
+  private Long sensorId;  // <-- Using Long natively matching Sensor pk
 
-    @Column(nullable = false)
-    private Double value;
+  @ManyToOne
+  @JoinColumn(name = "sensorId", referencedColumnName = "id", insertable = false, updatable = false)
+  private SensorEntity sensor; // <-- Proper Object relational tie to sensor(one)
 
-    @Column(nullable = false)
-    private Instant timestamp;
+  @OneToOne(mappedBy = "sensorReading")
+  private AlertEntity alert;
 
-    public Long getReadingId() {
-        return readingId;
-    }
+  // GETTERS AND SETTERS
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
-    public void setReadingId(Long readingId) {
-        this.readingId = readingId;
-    }
+  public Double getValue() { return value; }
+  public void setValue(Double value) { this.value = value; }
 
-    public Integer getSetupId() {
-        return setupId;
-    }
+  public Instant getTimestamp() { return timestamp; }
+  public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
 
-    public void setSetupId(Integer setupId) {
-        this.setupId = setupId;
-    }
+  public Long getSensorId() { return sensorId; }
+  public void setSensorId(Long sensorId) { this.sensorId = sensorId; }
 
-    public Integer getSensorId() {
-        return sensorId;
-    }
+  public SensorEntity getSensor() { return sensor; }
+  public void setSensor(SensorEntity sensor) { this.sensor = sensor; }
 
-    public void setSensorId(Integer sensorId) {
-        this.sensorId = sensorId;
-    }
-
-    public String getSensorType() {
-        return sensorType;
-    }
-
-    public void setSensorType(String sensorType) {
-        this.sensorType = sensorType;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
+  public AlertEntity getAlert() { return alert; }
+  public void setAlert(AlertEntity alert) { this.alert = alert; }
 }

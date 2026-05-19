@@ -8,7 +8,7 @@ public class SensorEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long sensorId;
+  private Long id;
 
   @Column(nullable = false)
   private String unit;
@@ -23,8 +23,15 @@ public class SensorEntity {
   @Column(nullable = false)
   private String sensorTypeName;
 
-  public Long getSensorId() { return sensorId; }
-  public void setSensorId(Long sensorId) { this.sensorId = sensorId; }
+  @ManyToOne
+  @JoinColumn(name = "sensorTypeName", referencedColumnName = "name", insertable = false, updatable = false)
+  private SensorTypeEntity sensorType;
+
+  @OneToMany(mappedBy = "sensor")
+  private java.util.List<SensorReadingEntity> sensorReadings;
+
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
   public String getUnit() { return unit; }
   public void setUnit(String unit) { this.unit = unit; }
@@ -37,4 +44,7 @@ public class SensorEntity {
 
   public String getSensorTypeName() { return sensorTypeName; }
   public void setSensorTypeName(String sensorTypeName) { this.sensorTypeName = sensorTypeName; }
+
+  public SensorTypeEntity getSensorType() { return sensorType; }
+  public void setSensorType(SensorTypeEntity sensorType) { this.sensorType = sensorType; }
 }

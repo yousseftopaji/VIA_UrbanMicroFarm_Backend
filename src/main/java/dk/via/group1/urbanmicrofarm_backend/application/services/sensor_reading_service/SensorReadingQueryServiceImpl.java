@@ -2,10 +2,13 @@ package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading
 
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
+import dk.via.group1.urbanmicrofarm_backend.database.entities.SensorEntity;
 import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
+import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorRepository;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,12 +16,15 @@ import java.util.Optional;
 public class SensorReadingQueryServiceImpl implements SensorReadingQueryService {
 
     private final SensorReadingRepository sensorReadingRepository;
+    private final SensorRepository sensorRepository;
     private final SensorReadingPersistenceMapper sensorReadingPersistenceMapper;
 
     public SensorReadingQueryServiceImpl(
             SensorReadingRepository sensorReadingRepository,
+            SensorRepository sensorRepository,
             SensorReadingPersistenceMapper sensorReadingPersistenceMapper) {
         this.sensorReadingRepository = sensorReadingRepository;
+        this.sensorRepository = sensorRepository;
         this.sensorReadingPersistenceMapper = sensorReadingPersistenceMapper;
     }
 
@@ -27,8 +33,13 @@ public class SensorReadingQueryServiceImpl implements SensorReadingQueryService 
         validateSerialNumber(serialNumber);
         String validSensorType = validateSensorType(sensorType);
 
+        Optional<SensorEntity> sensor = sensorRepository.findFirstBySerialNumberAndSensorTypeName(serialNumber, validSensorType);
+        if (sensor.isEmpty()) {
+            return Optional.empty();
+        }
+
         return sensorReadingRepository
-                .findFirstBySetupIdAndSensorTypeOrderByTimestampDesc(setupId, validSensorType)
+                .findFirstBySensorIdOrderByTimestampDesc(sensor.get().getId())
                 .map(sensorReadingPersistenceMapper::toDomain);
     }
 
@@ -37,8 +48,13 @@ public class SensorReadingQueryServiceImpl implements SensorReadingQueryService 
         validateSerialNumber(serialNumber);
         String validSensorType = validateSensorType(sensorType);
 
+        Optional<SensorEntity> sensor = sensorRepository.findFirstBySerialNumberAndSensorTypeName(serialNumber, validSensorType);
+        if (sensor.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         return sensorReadingRepository
-                .findBySerialNumberAndSensorTypeOrderByTimestampDesc(serialNumber, validSensorType)
+                .findBySensorIdOrderByTimestampDesc(sensor.get().getId())
                 .stream()
                 .map(sensorReadingPersistenceMapper::toDomain)
                 .toList();

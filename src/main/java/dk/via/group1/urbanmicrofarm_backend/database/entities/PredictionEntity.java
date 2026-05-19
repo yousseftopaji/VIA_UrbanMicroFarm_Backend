@@ -9,33 +9,33 @@ public class PredictionEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long predictionId;
+  private Long id;
 
   @Column(nullable = false)
   private Double predictedValue;
 
-  private Instant startDate;
-  private Instant endDate;
+  @Column(nullable = false)
   private Instant createdAt;
 
   @Column(nullable = false)
-  private String plantName;
+  private Long plantId;
 
-  public Long getPredictionId() { return predictionId; }
-  public void setPredictionId(Long predictionId) { this.predictionId = predictionId; }
+  @ManyToOne
+  @JoinColumn(name = "plantId", referencedColumnName = "id", insertable = false, updatable = false)
+  private PlantEntity plant;
+
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
   public Double getPredictedValue() { return predictedValue; }
   public void setPredictedValue(Double predictedValue) { this.predictedValue = predictedValue; }
 
-  public Instant getStartDate() { return startDate; }
-  public void setStartDate(Instant startDate) { this.startDate = startDate; }
-
-  public Instant getEndDate() { return endDate; }
-  public void setEndDate(Instant endDate) { this.endDate = endDate; }
-
   public Instant getCreatedAt() { return createdAt; }
   public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 
-  public String getPlantName() { return plantName; }
-  public void setPlantName(String plantName) { this.plantName = plantName; }
+  public Long getPlantId() { return plantId; }
+  public void setPlantId(Long plantId) { this.plantId = plantId; }
+
+  public PlantEntity getPlant() { return plant; }
+  public void setPlant(PlantEntity plant) { this.plant = plant; }
 }
