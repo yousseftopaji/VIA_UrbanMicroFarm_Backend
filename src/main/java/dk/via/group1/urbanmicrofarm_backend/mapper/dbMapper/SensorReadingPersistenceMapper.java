@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SensorReadingPersistenceMapper {
 
-    public SensorReadingEntity toEntity(int setupId, SensorReading sensorReading) {
+    public SensorReadingEntity toEntity(String serialNumber, SensorReading sensorReading) {
         SensorReadingEntity entity = new SensorReadingEntity();
 
-        entity.setSetupId(setupId);
+        entity.setSerialNumber(serialNumber);
         entity.setSensorId(sensorReading.getSensor().getSensorId());
         entity.setSensorType(sensorReading.getSensor().getType().name());
         entity.setValue(sensorReading.getValue());

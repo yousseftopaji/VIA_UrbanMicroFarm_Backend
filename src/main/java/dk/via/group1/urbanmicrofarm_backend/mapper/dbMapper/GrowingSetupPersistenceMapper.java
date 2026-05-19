@@ -7,17 +7,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class GrowingSetupPersistenceMapper {
 
-  public GrowingSetupEntity toEntity(String email, GrowingSetup growingSetup) {
+  public GrowingSetupEntity toEntity(Long userId, GrowingSetup growingSetup) {
     GrowingSetupEntity entity = new GrowingSetupEntity();
     entity.setSerialNumber(growingSetup.getSerialNumber());
     entity.setLocation(growingSetup.getLocation());
-    entity.setEmail(email);
+    entity.setUserId(userId);
     return entity;
   }
 
   public GrowingSetup toDomain(GrowingSetupEntity entity) {
     return new GrowingSetup(
-        entity.getSetupId(),
         entity.getSerialNumber(),
         entity.getLocation(),
         null

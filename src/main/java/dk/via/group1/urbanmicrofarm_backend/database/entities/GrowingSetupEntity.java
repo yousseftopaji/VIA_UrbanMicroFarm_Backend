@@ -7,19 +7,17 @@ import jakarta.persistence.*;
 public class GrowingSetupEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int setupId;
-
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String serialNumber;
 
   private String location;
 
-  @Column
-  private String email;
+  @Column(nullable = false)
+  private Long userId;
 
-  public int getSetupId() { return setupId; }
-  public void setSetupId(int setupId) { this.setupId = setupId; }
+  @ManyToOne
+  @JoinColumn(name = "userId", referencedColumnName = "id", insertable = false, updatable = false)
+  private UserEntity user;
 
   public String getSerialNumber() { return serialNumber; }
   public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
@@ -27,6 +25,9 @@ public class GrowingSetupEntity {
   public String getLocation() { return location; }
   public void setLocation(String location) { this.location = location; }
 
-  public String getEmail() { return email; }
-  public void setEmail(String email) { this.email = email; }
+  public Long getUserId() { return userId; }
+  public void setUserId(Long userId) { this.userId = userId; }
+
+  public UserEntity getUser() { return user; }
+  public void setUser(UserEntity user) { this.user = user; }
 }

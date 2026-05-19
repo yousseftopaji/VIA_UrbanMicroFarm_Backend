@@ -1,13 +1,11 @@
 package dk.via.group1.urbanmicrofarm_backend.application.services.sensor_reading_service;
 
-import com.google.type.DateTime;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorReading;
 import dk.via.group1.urbanmicrofarm_backend.application.domain.SensorType;
 import dk.via.group1.urbanmicrofarm_backend.database.repository.SensorReadingRepository;
 import dk.via.group1.urbanmicrofarm_backend.mapper.dbMapper.SensorReadingPersistenceMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,30 +23,42 @@ public class SensorReadingQueryServiceImpl implements SensorReadingQueryService 
     }
 
     @Override
-    public Optional<SensorReading> getLatestReading(Integer sensorId) {
-        validateSensorId(sensorId);
+    public Optional<SensorReading> getLatestReading(String serialNumber, String sensorType) {
+        validateSerialNumber(serialNumber);
+        String validSensorType = validateSensorType(sensorType);
 
         return sensorReadingRepository
-                .findFirstBySensorIdOrderByTimestampDesc(sensorId)
+                .findFirstBySetupIdAndSensorTypeOrderByTimestampDesc(setupId, validSensorType)
                 .map(sensorReadingPersistenceMapper::toDomain);
     }
 
     @Override
-    public List<SensorReading> getHistoricalReadings(Integer sensorId, Instant from, Instant to) {
-        validateSensorId(sensorId);
+    public List<SensorReading> getHistoricalReadings(String serialNumber, String sensorType) {
+        validateSerialNumber(serialNumber);
+        String validSensorType = validateSensorType(sensorType);
 
         return sensorReadingRepository
-                .findBySensorIdAndTimeRange(sensorId, from, to)
+                .findBySerialNumberAndSensorTypeOrderByTimestampDesc(serialNumber, validSensorType)
                 .stream()
                 .map(sensorReadingPersistenceMapper::toDomain)
                 .toList();
     }
 
-    private void validateSensorId(Integer sensorId) {
-        if (sensorId == null || sensorId <= 0) {
-            throw new IllegalArgumentException("Invalid setup id");
+    private void validateSerialNumber(String serialNumber) {
+        if (serialNumber == null || serialNumber.isBlank()) {
+            throw new IllegalArgumentException("Invalid serial number");
+        }
+    }
+
+    private String validateSensorType(String sensorType) {
+        if (sensorType == null || sensorType.isBlank()) {
+            throw new IllegalArgumentException("Sensor type is required");
         }
 
-//        TODO: fetch sensorId from database and check if exists
+        try {
+            return SensorType.valueOf(sensorType.toUpperCase()).name();
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Invalid sensor type: " + sensorType);
+        }
     }
 }
