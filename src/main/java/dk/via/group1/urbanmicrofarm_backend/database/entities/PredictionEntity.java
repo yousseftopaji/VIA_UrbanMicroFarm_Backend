@@ -19,19 +19,7 @@ public class PredictionEntity {
   @Column(nullable = false)
   private String plantName;
 
-    // JPA requires a no-argument constructor with at least protected visibility
-    protected PredictionEntity() {
-    }
-
-    // Set createdAt automatically when the entity is first persisted
-    @PrePersist
-    private void onPrePersist() {
-        if (this.createdAt == null) {
-            this.createdAt = Instant.now();
-        }
-    }
-
-    public Long getPredictionId() { return predictionId; }
+  public Long getPredictionId() { return predictionId; }
   public void setPredictionId(Long predictionId) { this.predictionId = predictionId; }
 
   public Double getPredictedValue() { return predictedValue; }
