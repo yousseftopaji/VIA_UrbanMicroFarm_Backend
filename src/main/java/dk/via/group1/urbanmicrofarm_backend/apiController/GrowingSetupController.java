@@ -28,30 +28,30 @@ public class GrowingSetupController {
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
   public GrowingSetupResponseDto assignSetupToUser(@RequestBody GrowingSetupAssignDto request) {
-    GrowingSetup assigned = service.assignSetupToUser(request.getUserId(), request.getSetupId());
+    GrowingSetup assigned = service.assignSetupToUser(request.getUserId(), request.getSerialNumber());
     return apiMapper.toResponseDto(assigned);
   }
 
-  @PatchMapping("/{setupId}")
+  @PatchMapping("/{serialNumber}")
   @ResponseStatus(HttpStatus.OK)
   public GrowingSetupResponseDto updateLocation(
-      @PathVariable int setupId,
+      @PathVariable String serialNumber,
       @RequestBody PatchLocationDto patchLocationDto) {
-    GrowingSetup updated = service.updateSetupLocation(setupId, patchLocationDto.getLocation());
+    GrowingSetup updated = service.updateSetupLocation(serialNumber, patchLocationDto.getLocation());
     return apiMapper.toResponseDto(updated);
   }
 
-  @DeleteMapping("/{setupId}")
+  @DeleteMapping("/{serialNumber}")
   @ResponseStatus(HttpStatus.OK)
-  public MessageResponseDto disconnectSetup(@PathVariable int setupId) {
-    service.disconnectSetup(setupId);
+  public MessageResponseDto disconnectSetup(@PathVariable String serialNumber) {
+    service.disconnectSetup(serialNumber);
     return new MessageResponseDto("Setup disconnected successfully");
   }
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<GrowingSetupResponseDto.GrowingSetupDetails> getSetupsForUser(
-      @RequestParam("userId") int userId) {
+      @RequestParam("userId") Long userId) {
 
     return service.getSetupsForUser(userId)
         .stream()

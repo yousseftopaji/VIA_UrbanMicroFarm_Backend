@@ -59,14 +59,14 @@ public class WateringAutomationServiceImpl implements WateringAutomationService 
         // we send the predicted watering amount back to IoT through MQTT
 
         publishWaterCommand(
-                telemetryData.setupId(),
+                telemetryData.serialNumber(),
                 response.wateringAmount()
         );
     }
 
     // method to send the actuator command to the mqtt publisher
-    private void publishWaterCommand(int setupId, int amountMl) {
-        String topic = "farm/" + setupId + "/cmd"; // topic for backend to IoT command
+    private void publishWaterCommand(String serialNumber, int amountMl) {
+        String topic = "farm/" + serialNumber + "/cmd"; // topic for backend to IoT command
 
         // we create actuator command for water pump
         ActuatorCommandDto command = new ActuatorCommandDto(

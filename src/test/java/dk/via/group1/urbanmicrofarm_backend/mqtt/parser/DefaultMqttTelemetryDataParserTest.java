@@ -16,7 +16,7 @@ class DefaultMqttTelemetryDataParserTest
   void fromJson_shouldMapSnakeCaseJsonToDto() {
     String json = """
         {
-          "setup_id": 12,
+          "serial_number": "SN123",
           "sensor_id": 3,
           "temperature": 24,
           "humidity": 51,
@@ -27,7 +27,7 @@ class DefaultMqttTelemetryDataParserTest
 
     MqttTelemetryDataDto dto = parser.fromJson(json);
 
-    assertEquals(12, dto.setupId());
+    assertEquals("SN123", dto.serialNumber());
     assertEquals(3, dto.sensorId());
     assertEquals(24, dto.temperature());
     assertEquals(51, dto.humidity());
@@ -37,11 +37,11 @@ class DefaultMqttTelemetryDataParserTest
 
   @Test
   void toJson_shouldSerializeDtoToSnakeCaseJson() {
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(12, 3, 24, 51, 900, 18);
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN123", 3, 24, 51, 900, 18);
 
     String json = parser.toJson(dto);
 
-    assertEquals("{\"setup_id\":12,\"sensor_id\":3,\"temperature\":24,\"humidity\":51,\"light\":900,\"soil_moisture\":18}", json);
+    assertEquals("{\"serial_number\":\"SN123\",\"sensor_id\":3,\"temperature\":24,\"humidity\":51,\"light\":900,\"soil_moisture\":18}", json);
   }
 
   @Test

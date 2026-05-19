@@ -9,7 +9,7 @@ public class AlertEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long alertId;
+  private Long id;
 
   @Column(nullable = false)
   private String type;
@@ -20,11 +20,22 @@ public class AlertEntity {
   @Column(nullable = false)
   private Instant timestamp;
 
+  @Column(nullable = true)
   private Long sensorReadingId;
-  private Instant wateringEventStartTime;
 
-  public Long getAlertId() { return alertId; }
-  public void setAlertId(Long alertId) { this.alertId = alertId; }
+  @OneToOne
+  @JoinColumn(name = "sensorReadingId", referencedColumnName = "id", insertable = false, updatable = false)
+  private SensorReadingEntity sensorReading;
+
+  @Column(nullable = true)
+  private Long wateringEventId;
+
+  @OneToOne
+  @JoinColumn(name = "wateringEventId", referencedColumnName = "id", insertable = false, updatable = false)
+  private WateringEventEntity wateringEvent;
+
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
   public String getType() { return type; }
   public void setType(String type) { this.type = type; }
@@ -41,6 +52,12 @@ public class AlertEntity {
   public Long getSensorReadingId() { return sensorReadingId; }
   public void setSensorReadingId(Long sensorReadingId) { this.sensorReadingId = sensorReadingId; }
 
-  public Instant getWateringEventStartTime() { return wateringEventStartTime; }
-  public void setWateringEventStartTime(Instant wateringEventStartTime) { this.wateringEventStartTime = wateringEventStartTime; }
+  public SensorReadingEntity getSensorReading() { return sensorReading; }
+  public void setSensorReading(SensorReadingEntity sensorReading) { this.sensorReading = sensorReading; }
+
+  public Long getWateringEventId() { return wateringEventId; }
+  public void setWateringEventId(Long wateringEventId) { this.wateringEventId = wateringEventId; }
+
+  public WateringEventEntity getWateringEvent() { return wateringEvent; }
+  public void setWateringEvent(WateringEventEntity wateringEvent) { this.wateringEvent = wateringEvent; }
 }

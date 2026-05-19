@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface GrowingSetupService {
 
-  GrowingSetup assignSetupToUser(int userId, int setupId);
+  GrowingSetup assignSetupToUser(Long userId, String serialNumber);
 
-  GrowingSetup updateSetupLocation(int setupId, String location);
+  GrowingSetup updateSetupLocation(String serialNumber, String location);
 
-  void disconnectSetup(int setupId);
+  void disconnectSetup(String serialNumber);
 
-  List<GrowingSetup> getSetupsForUser(int userId);
+  List<GrowingSetup> getSetupsForUser(Long userId);
 }

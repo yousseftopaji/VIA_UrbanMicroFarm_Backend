@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface SensorRepository extends JpaRepository<SensorEntity, Long> {
 
-  List<SensorEntity> findBySetupId(Long setupId);
+  List<SensorEntity> findBySerialNumber(String serialNumber);
 
-  List<SensorEntity> findBySetupIdAndSensorTypeName(Long setupId, String sensorTypeName);
+  List<SensorEntity> findBySerialNumberAndSensorTypeName(String serialNumber, String sensorTypeName);
+  
+  java.util.Optional<SensorEntity> findFirstBySerialNumberAndSensorTypeName(String serialNumber, String sensorTypeName);
 }

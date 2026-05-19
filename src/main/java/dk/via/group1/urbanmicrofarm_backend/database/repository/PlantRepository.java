@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PlantRepository extends JpaRepository<PlantEntity, String> {
+public interface PlantRepository extends JpaRepository<PlantEntity, Long> {
 
-  List<PlantEntity> findBySetupId(Long setupId);
+  List<PlantEntity> findBySensorId(Long sensorId);
 }

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ThresholdRepository extends JpaRepository<ThresholdEntity, String> {
+public interface ThresholdRepository extends JpaRepository<ThresholdEntity, Long> {
 
-  Optional<ThresholdEntity> findByType(String type);
+  Optional<ThresholdEntity> findByPlantId(Long plantId);
 }

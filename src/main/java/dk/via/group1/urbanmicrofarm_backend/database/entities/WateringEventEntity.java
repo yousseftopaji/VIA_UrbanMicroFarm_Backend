@@ -1,7 +1,6 @@
 package dk.via.group1.urbanmicrofarm_backend.database.entities;
 
 import jakarta.persistence.*;
-import java.time.Instant;
 
 @Entity
 @Table(name = "watering_event", schema = "urban_micro_farm_app")
@@ -9,33 +8,36 @@ public class WateringEventEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long wateringEventId;
+  private Long id;
 
-  @Column(nullable = false)
-  private Instant startTime;
-
-  private Instant endTime;
-  private Double waterUsedLiters;
+  private Double waterUsed_mL;
   private String mode;
 
   @Column(nullable = false)
-  private String actuatorType;
+  private Long actuatorId;
 
-  public Long getWateringEventId() { return wateringEventId; }
-  public void setWateringEventId(Long wateringEventId) { this.wateringEventId = wateringEventId; }
+  @ManyToOne
+  @JoinColumn(name = "actuatorId", referencedColumnName = "id", insertable = false, updatable = false)
+  private ActuatorEntity actuator;
 
-  public Instant getStartTime() { return startTime; }
-  public void setStartTime(Instant startTime) { this.startTime = startTime; }
+  @OneToOne(mappedBy = "wateringEvent")
+  private AlertEntity alert;
 
-  public Instant getEndTime() { return endTime; }
-  public void setEndTime(Instant endTime) { this.endTime = endTime; }
+  public Long getId() { return id; }
+  public void setId(Long id) { this.id = id; }
 
-  public Double getWaterUsedLiters() { return waterUsedLiters; }
-  public void setWaterUsedLiters(Double waterUsedLiters) { this.waterUsedLiters = waterUsedLiters; }
+  public Double getWaterUsed_mL() { return waterUsed_mL; }
+  public void setWaterUsed_mL(Double waterUsed_mL) { this.waterUsed_mL = waterUsed_mL; }
 
   public String getMode() { return mode; }
   public void setMode(String mode) { this.mode = mode; }
 
-  public String getActuatorType() { return actuatorType; }
-  public void setActuatorType(String actuatorType) { this.actuatorType = actuatorType; }
+  public Long getActuatorId() { return actuatorId; }
+  public void setActuatorId(Long actuatorId) { this.actuatorId = actuatorId; }
+
+  public ActuatorEntity getActuator() { return actuator; }
+  public void setActuator(ActuatorEntity actuator) { this.actuator = actuator; }
+
+  public AlertEntity getAlert() { return alert; }
+  public void setAlert(AlertEntity alert) { this.alert = alert; }
 }

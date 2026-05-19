@@ -12,17 +12,21 @@ import java.util.List;
 public class SensorReadingApiMapper {
 
     public SensorReadingLatestResponseDto toLatestResponseDto(
+            String serialNumber,
             SensorReading sensorReading) {
 
         return new SensorReadingLatestResponseDto(
+                serialNumber,
                 sensorReading.getSensor().getSensorId(),
+                sensorReading.getSensor().getType().name(),
                 sensorReading.getValue(),
                 sensorReading.getTimestamp()
         );
     }
 
     public SensorReadingHistoryResponseDto toHistoryResponseDto(
-            Integer sensorId,
+            String serialNumber,
+            String sensorType,
             List<SensorReading> readings) {
 
         List<SensorReadingHistoryResponseDto.SensorReadingHistoryItemDto> data =
@@ -33,6 +37,10 @@ public class SensorReadingApiMapper {
                         ))
                         .toList();
 
-        return new SensorReadingHistoryResponseDto(sensorId, data);
+        return new SensorReadingHistoryResponseDto(
+                serialNumber,
+                sensorType.toUpperCase(),
+                data
+        );
     }
 }

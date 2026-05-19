@@ -4,7 +4,8 @@ import java.time.Instant;
 import java.util.List;
 
 public record SensorReadingHistoryResponseDto(
-        Integer sensorId,
+        String serialNumber,
+        String sensorType,
         List<SensorReadingHistoryItemDto> data
 ) {
     public record SensorReadingHistoryItemDto(

@@ -13,9 +13,9 @@ public class MqttSensorReadingMapper implements MqttMapper<MqttTelemetryDataDto,
       throw new IllegalArgumentException("Telemetry payload must not be null");
     }
 
-    if (payload.setupId() <= 0) {
+    if (payload.serialNumber() == null || payload.serialNumber().isBlank()) {
       throw new IllegalArgumentException(
-          "Invalid telemetry data: setupId must be greater than 0"
+          "Invalid telemetry data: serialNumber must not be null or blank"
       );
     }
     if ( payload.sensorId() == null) {
@@ -25,7 +25,7 @@ public class MqttSensorReadingMapper implements MqttMapper<MqttTelemetryDataDto,
     }
 
     return new TelemetryData(
-        payload.setupId(),
+        payload.serialNumber(),
         payload.sensorId(),
         payload.temperature(),
         payload.humidity(),
@@ -41,7 +41,7 @@ public class MqttSensorReadingMapper implements MqttMapper<MqttTelemetryDataDto,
     }
 
     return new MqttTelemetryDataDto(
-        source.setupId(),
+        source.serialNumber(),
         source.sensorId(),
         source.temperature(),
         source.humidity(),

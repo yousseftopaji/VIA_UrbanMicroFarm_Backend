@@ -11,9 +11,9 @@ public class GrowingSetupApiMapper {
     if (domain == null) return null;
 
     GrowingSetupResponseDto.GrowingSetupDetails details = new GrowingSetupResponseDto.GrowingSetupDetails();
-    details.setId(domain.getSetupId());
+    details.setId(domain.getSerialNumber());
     details.setLocation(domain.getLocation());
-    details.setStatus(domain.getStatus() != null ? domain.getStatus() : "ACTIVE");
+    details.setStatus(domain.getStatus() != null && !domain.getStatus().isBlank() ? domain.getStatus() : "ACTIVE");
 
     return new GrowingSetupResponseDto(details);
   }
