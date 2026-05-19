@@ -14,24 +14,28 @@ public class PredictionEntity {
   @Column(nullable = false)
   private Double predictedValue;
 
-  private Instant startDate;
-  private Instant endDate;
   private Instant createdAt;
 
   @Column(nullable = false)
   private String plantName;
 
-  public Long getPredictionId() { return predictionId; }
+    // JPA requires a no-argument constructor with at least protected visibility
+    protected PredictionEntity() {
+    }
+
+    // Set createdAt automatically when the entity is first persisted
+    @PrePersist
+    private void onPrePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = Instant.now();
+        }
+    }
+
+    public Long getPredictionId() { return predictionId; }
   public void setPredictionId(Long predictionId) { this.predictionId = predictionId; }
 
   public Double getPredictedValue() { return predictedValue; }
   public void setPredictedValue(Double predictedValue) { this.predictedValue = predictedValue; }
-
-  public Instant getStartDate() { return startDate; }
-  public void setStartDate(Instant startDate) { this.startDate = startDate; }
-
-  public Instant getEndDate() { return endDate; }
-  public void setEndDate(Instant endDate) { this.endDate = endDate; }
 
   public Instant getCreatedAt() { return createdAt; }
   public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
