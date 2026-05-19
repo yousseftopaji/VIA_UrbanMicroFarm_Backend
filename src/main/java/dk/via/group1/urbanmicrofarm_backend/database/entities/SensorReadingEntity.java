@@ -9,7 +9,7 @@ public class SensorReadingEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;   // <--- Changed to matching 'id' as requested
+  private Long id;
 
   @Column(nullable = false)
   private Double value;
@@ -18,11 +18,11 @@ public class SensorReadingEntity {
   private Instant timestamp;
 
   @Column(nullable = false)
-  private Long sensorId;  // <-- Using Long natively matching Sensor pk
+  private Long sensorId;
 
   @ManyToOne
   @JoinColumn(name = "sensorId", referencedColumnName = "id", insertable = false, updatable = false)
-  private SensorEntity sensor; // <-- Proper Object relational tie to sensor(one)
+  private SensorEntity sensor;
 
   @OneToOne(mappedBy = "sensorReading")
   private AlertEntity alert;
