@@ -15,7 +15,6 @@ public class GrowingSetupDbMapper {
     }
 
     GrowingSetup setup = new GrowingSetup(
-        entity.getSetupId(),
         entity.getSerialNumber(),
         entity.getLocation(),
         new ArrayList<>()
@@ -33,10 +32,9 @@ public class GrowingSetupDbMapper {
 
     GrowingSetupEntity entity = new GrowingSetupEntity();
 
-    entity.setSetupId(domain.getSetupId());
     entity.setSerialNumber(domain.getSerialNumber());
     entity.setLocation(domain.getLocation());
-    entity.setEmail("pending-email-assignment");
+    entity.setUserId(1L); // TODO: Replace with actual user ID logic
 
     return entity;
   }

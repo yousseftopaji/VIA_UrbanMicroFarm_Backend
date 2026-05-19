@@ -21,19 +21,19 @@ public class GrowingSetupServiceImpl implements GrowingSetupService {
   }
 
   @Override
-  public GrowingSetup assignSetupToUser(int userId, int setupId) {
-    GrowingSetupEntity entity = repository.findById(setupId)
-        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with ID: " + setupId));
+  public GrowingSetup assignSetupToUser(Long userId, String serialNumber) {
+    GrowingSetupEntity entity = repository.findById(serialNumber)
+        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with serial number: " + serialNumber));
 
-    entity.setEmail(String.valueOf(userId));
+    entity.setUserId(userId);
 
     return dbMapper.toDomain(repository.save(entity));
   }
 
   @Override
-  public GrowingSetup updateSetupLocation(int setupId, String location) {
-    GrowingSetupEntity entity = repository.findById(setupId)
-        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with ID: " + setupId));
+  public GrowingSetup updateSetupLocation(String serialNumber, String location) {
+    GrowingSetupEntity entity = repository.findById(serialNumber)
+        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with serial number: " + serialNumber));
 
     entity.setLocation(location);
 
@@ -41,18 +41,18 @@ public class GrowingSetupServiceImpl implements GrowingSetupService {
   }
 
   @Override
-  public void disconnectSetup(int setupId) {
-    GrowingSetupEntity entity = repository.findById(setupId)
-        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with ID: " + setupId));
+  public void disconnectSetup(String serialNumber) {
+    GrowingSetupEntity entity = repository.findById(serialNumber)
+        .orElseThrow(() -> new IllegalArgumentException("Growing setup not found with serial number: " + serialNumber));
 
-    entity.setEmail(null);
+    entity.setUserId(null);
 
     repository.save(entity);
   }
 
   @Override
-  public List<GrowingSetup> getSetupsForUser(int userId) {
-    return repository.findByEmail(String.valueOf(userId)).stream()
+  public List<GrowingSetup> getSetupsForUser(Long userId) {
+    return repository.findByUserId(userId).stream()
         .map(dbMapper::toDomain)
         .collect(Collectors.toList());
   }

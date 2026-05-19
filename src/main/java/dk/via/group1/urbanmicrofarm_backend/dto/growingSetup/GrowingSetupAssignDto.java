@@ -2,12 +2,12 @@ package dk.via.group1.urbanmicrofarm_backend.dto.growingSetup;
 
 public class GrowingSetupAssignDto
 {
-  private int userId;
-  private int setupId;
+  private Long userId;
+  private String serialNumber;
 
-  public int getUserId() { return userId; }
-  public void setUserId(int userId) { this.userId = userId; }
+  public Long getUserId() { return userId; }
+  public void setUserId(Long userId) { this.userId = userId; }
 
-  public int getSetupId() { return setupId; }
-  public void setSetupId(int setupId) { this.setupId = setupId; }
+  public String getSerialNumber() { return serialNumber; }
+  public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
 }

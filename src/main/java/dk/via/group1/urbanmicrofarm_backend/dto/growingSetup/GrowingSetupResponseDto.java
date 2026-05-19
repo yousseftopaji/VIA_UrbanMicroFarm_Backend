@@ -11,12 +11,12 @@ public class GrowingSetupResponseDto {
   public void setGrowingSetup(GrowingSetupDetails growingSetup) { this.growingSetup = growingSetup; }
 
   public static class GrowingSetupDetails {
-    private int id;
+    private String id;
     private String location;
     private String status;
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }

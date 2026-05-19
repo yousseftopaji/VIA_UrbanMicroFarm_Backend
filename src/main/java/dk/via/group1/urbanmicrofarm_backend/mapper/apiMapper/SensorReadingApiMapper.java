@@ -20,7 +20,7 @@ public class SensorReadingApiMapper {
                 sensorReading.getSensor().getSensorId(),
                 sensorReading.getSensor().getType().name(),
                 sensorReading.getValue(),
-                sensorReading.getTimestamp().toInstant(ZoneOffset.UTC)
+                sensorReading.getTimestamp()
         );
     }
 
@@ -33,7 +33,7 @@ public class SensorReadingApiMapper {
                 readings.stream()
                         .map(reading -> new SensorReadingHistoryResponseDto.SensorReadingHistoryItemDto(
                                 reading.getValue(),
-                                reading.getTimestamp().toInstant(ZoneOffset.UTC)
+                                reading.getTimestamp()
                         ))
                         .toList();
 

@@ -87,9 +87,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should process reading when all sensor values are zero")
   void should_processReading_whenAllSensorValuesAreZero() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":0,\"humidity\":0,\"light\":0,\"soil_moisture\":0}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 0, 0, 0, 0);
-    TelemetryData domain = new TelemetryData(1, 100, 0, 0, 0, 0);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":0,\"humidity\":0,\"light\":0,\"soil_moisture\":0}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 0, 0, 0, 0);
+    TelemetryData domain = new TelemetryData("SN1", 100, 0, 0, 0, 0);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -107,9 +107,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should parse map and process single valid telemetry message")
   void should_parseMapAndProcessSingleValidTelemetryMessage() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -121,7 +121,7 @@ class SensorReadingMqttMessageHandlerTest {
     verify(sensorReadingService).processReadings(telemetryDataCaptor.capture());
 
     TelemetryData captured = telemetryDataCaptor.getValue();
-    assertThat(captured.setupId()).isEqualTo(1);
+    assertThat(captured.serialNumber()).isEqualTo("SN1");
     assertThat(captured.sensorId()).isEqualTo(100);
     assertThat(captured.temperature()).isEqualTo(25);
     assertThat(captured.humidity()).isEqualTo(60);
@@ -137,13 +137,13 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should process multiple consecutive messages without state pollution")
   void should_processMultipleConsecutiveMessages_withoutStatePollution() {
     String topic = "sensors/telemetry";
-    String payload1 = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    String payload2 = "{\"setup_id\":2,\"sensor_id\":200,\"temperature\":30,\"humidity\":70,\"light\":600,\"soil_moisture\":50}";
+    String payload1 = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    String payload2 = "{\"serial_number\":\"SN2\",\"sensor_id\":200,\"temperature\":30,\"humidity\":70,\"light\":600,\"soil_moisture\":50}";
 
-    MqttTelemetryDataDto dto1 = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    MqttTelemetryDataDto dto2 = new MqttTelemetryDataDto(2, 200, 30, 70, 600, 50);
-    TelemetryData domain1 = new TelemetryData(1, 100, 25, 60, 500, 45);
-    TelemetryData domain2 = new TelemetryData(2, 200, 30, 70, 600, 50);
+    MqttTelemetryDataDto dto1 = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    MqttTelemetryDataDto dto2 = new MqttTelemetryDataDto("SN2", 200, 30, 70, 600, 50);
+    TelemetryData domain1 = new TelemetryData("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain2 = new TelemetryData("SN2", 200, 30, 70, 600, 50);
 
     when(telemetryDataParser.fromJson(payload1)).thenReturn(dto1);
     when(telemetryDataParser.fromJson(payload2)).thenReturn(dto2);
@@ -161,9 +161,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should process message when topic contains multiple path segments")
   void should_processMessage_whenTopicContainsMultiplePathSegments() {
     String topic = "farm/sector1/greenhouse/sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -181,9 +181,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should process message when payload contains extra JSON fields")
   void should_processMessage_whenPayloadContainsExtraJsonFields() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45,\"extra_field\":\"ignored\"}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45,\"extra_field\":\"ignored\"}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -197,9 +197,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should process message when payload contains minimum required fields")
   void should_processMessage_whenPayloadContainsMinimumRequiredFields() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":1,\"temperature\":0,\"humidity\":0,\"light\":0,\"soil_moisture\":0}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 1, 0, 0, 0, 0);
-    TelemetryData domain = new TelemetryData(1, 1, 0, 0, 0, 0);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":1,\"temperature\":0,\"humidity\":0,\"light\":0,\"soil_moisture\":0}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 1, 0, 0, 0, 0);
+    TelemetryData domain = new TelemetryData("SN1", 1, 0, 0, 0, 0);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -217,9 +217,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should invoke parser mapper and service in correct order when message is valid")
   void should_invokeParserMapperAndServiceInCorrectOrder_whenMessageIsValid() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -236,8 +236,8 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should not invoke service when mapper throws exception")
   void should_notInvokeService_whenMapperThrowsException() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenThrow(new IllegalArgumentException("Invalid data"));
@@ -287,11 +287,11 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should catch and log exception when mapper throws illegal argument exception")
   void should_catchAndLogException_whenMapperThrowsIllegalArgumentException() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":0,\"sensor_id\":null}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(0, null, 0, 0, 0, 0);
+    String payload = "{\"serial_number\":\"INVALID\",\"sensor_id\":null}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("INVALID", null, 0, 0, 0, 0);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
-    when(sensorReadingMapper.fromPayload(dto)).thenThrow(new IllegalArgumentException("setupId must be > 0"));
+    when(sensorReadingMapper.fromPayload(dto)).thenThrow(new IllegalArgumentException("serialNumber must be valid"));
 
     handler.handle(topic, payload);
 
@@ -304,9 +304,9 @@ class SensorReadingMqttMessageHandlerTest {
   @DisplayName("should catch and log exception when service throws runtime exception")
   void should_catchAndLogException_whenServiceThrowsRuntimeException() {
     String topic = "sensors/telemetry";
-    String payload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String payload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(payload)).thenReturn(dto);
     when(sensorReadingMapper.fromPayload(dto)).thenReturn(domain);
@@ -325,9 +325,9 @@ class SensorReadingMqttMessageHandlerTest {
   void should_continueOperating_afterPreviousMessageCausedException() {
     String topic = "sensors/telemetry";
     String badPayload = "invalid";
-    String goodPayload = "{\"setup_id\":1,\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
-    MqttTelemetryDataDto dto = new MqttTelemetryDataDto(1, 100, 25, 60, 500, 45);
-    TelemetryData domain = new TelemetryData(1, 100, 25, 60, 500, 45);
+    String goodPayload = "{\"serial_number\":\"SN1\",\"sensor_id\":100,\"temperature\":25,\"humidity\":60,\"light\":500,\"soil_moisture\":45}";
+    MqttTelemetryDataDto dto = new MqttTelemetryDataDto("SN1", 100, 25, 60, 500, 45);
+    TelemetryData domain = new TelemetryData("SN1", 100, 25, 60, 500, 45);
 
     when(telemetryDataParser.fromJson(badPayload)).thenThrow(new RuntimeException("Parse error"));
     when(telemetryDataParser.fromJson(goodPayload)).thenReturn(dto);
